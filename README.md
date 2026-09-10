@@ -1,7 +1,11 @@
-# MIQANet
+# M3IQANet
 
 Minimal implementation of the main method: image-conditioned factor prompts
 and direct similarity regression. No deep prompts or cross-batch memory.
+
+## DATASET
+Dataset can be downloaded at Google Drive, including the distorted images and the labels:
+https://drive.google.com/file/d/1ifGyMOPMqCOQtypCQGLmN2Vw5lowNeDF/view?usp=drive_link
 
 ## Install
 
