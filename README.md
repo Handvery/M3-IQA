@@ -81,5 +81,3 @@ less than `7e-7` in the recorded environment. This is a code-equivalence check,
 not a rerun of all training experiments. Exact benchmark replication also
 requires the same images, fixed splits, epoch count and checkpoint selection.
 
-Third-party attribution and licenses are retained in
-[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
