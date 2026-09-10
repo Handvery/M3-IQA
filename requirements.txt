@@ -1,0 +1,9 @@
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.5.1+cu121
+torchvision==0.20.1+cu121
+numpy==2.2.6
+scipy==1.15.3
+Pillow==10.2.0
+tqdm==4.66.1
+ftfy==6.3.1
+regex==2026.1.15
