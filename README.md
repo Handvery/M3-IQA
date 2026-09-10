@@ -3,26 +3,6 @@
 Minimal implementation of the main method: image-conditioned factor prompts
 and direct similarity regression. No deep prompts or cross-batch memory.
 
-## Method
-
-- Frozen OpenAI CLIP ViT-L/14@336px; RGB images resized to 518 x 518 with
-  bicubic interpolation, center-cropped and CLIP-normalized.
-- Patch features from layers 6, 12, 18 and 24 are projected to 768 dimensions,
-  L2-normalized at each layer and averaged, then normalized for similarity.
-- Nine clean/degraded prompt pairs use four shared learnable context tokens.
-  Prototype attention conditions the context on the image with scale 0.1.
-  Factor queries use the normalized difference of masked anchor-token means;
-  clean/degraded scoring uses the complete frozen CLIP text encoder.
-- Average pooling of patch/text cosine similarities gives 18 values:
-  `[9 clean, 9 degraded]`. Prediction is `Linear(18,32) -> GELU ->
-  Linear(32,1) -> Sigmoid`.
-- Trainable parameters: **3,553,409**. The CLIP backbone is frozen.
-
-The only loss is within-batch pairwise fidelity (prediction and target
-temperatures both 0.1) plus `0.2 * (1 - Pearson correlation)`. Scores are
-normalized with the training-set minimum and maximum. There are no additional
-evidence-pooling, factor-weighting, global-score, adapter or ablation branches.
-
 ## Install
 
 The recorded environment is Python 3.10, PyTorch 2.5.1 and CUDA 12.1.
@@ -59,16 +39,12 @@ CUDA_VISIBLE_DEVICES=0 python train.py \
   --test-csv /path/to/test.csv \
   --image-root /path/to/dataset \
   --output-dir runs/single \
-  --epochs 3 --batch-size 32 --seed 42
+  --epochs 5 --batch-size 32 --seed 42
 ```
 
-Use **3 epochs** for Single/Double/Triple and **2 epochs** for
-Object/Semantic/Depth/Overall. Each task is trained separately with its own
-CSV pair. Defaults match the experiments: AdamW at `3e-4`, weight decay
+Defaults match the experiments: AdamW at `3e-4`, weight decay
 `1e-3`, cosine decay to `1e-6`, gradient clipping at 1.0, no AMP, no data
-augmentation and training `drop_last=True`. The cosine schedule spans the
-requested total epochs, so a two-epoch run is not the first two epochs of a
-three-epoch run.
+augmentation and training `drop_last=True`. 
 
 Each epoch prints raw test PLCC/SRCC without nonlinear fitting. Outputs are
 `config.json`, `train_log.jsonl`, `best.json`, `best.pth`, and `last.pth`.
